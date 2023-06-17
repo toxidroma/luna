@@ -1,23 +1,26 @@
 import Clamp from math
 import MouseX, MouseY from gui
+import LButton, LLabel from luna
+size = luna.Scale 200
 class LFrame extends VGUI
     Base: 'EditablePanel'
-    Width: 640
-    Height: 480
-
+    
     Title: 'Window'
+    Width: 320
+    Height: 200
+
     IsMenu: false
     DeleteOnClose: true
     Draggable: true
     Sizable: false
-    ScreenLock: false
+    MinWidth: size
+    MinHeight: size
+    ScreenLock: true
     DeleteOnClose: true
-    MinWidth: 50
-    MinHeight: 50
     BackgroundBlur: false
     PaintShadow: true
-    new: (...) =>
-        super ...
+    new: (x, y) =>
+        super x, y
         @SetFocusTopLevel true
         with @btnClose = LButton!
             @Add @btnClose

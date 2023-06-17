@@ -6,21 +6,19 @@ DetectMenuFocus = (panel, mousecode) ->
             return
         return DetectMenuFocus panel\GetParent!, mousecode
     CloseDermaMenus!
-hook.Add 'VGUIMousePressed', _PKG\GetIdentifier!, DetectMenuFocus
+hook.Add 'VGUIMousePressed', 'MenuFocus', DetectMenuFocus
 
-export ^
-LPanel = include'lpanel.lua'
-LLabel = include'llabel.lua'
-LLabelCompute = include'llabelcompute.lua'
-LImage = include'limage.lua'
-LButton = include'lbutton.lua'
-LFrame = include'lframe.lua'
+export luna = {}
+with luna
+    .Scale = (value) -> math.max(value * (ScrH! / 1080), 1)
+    .Text = include'text.lua'
+    .LTextEntry = include'ltextentry.lua'
+    --.LPanel = include'lpanel.lua'
+    .LLabel = include'llabel.lua'
+    --.LLabelCompute = include'llabelcompute.lua'
+    --.LImage = include'limage.lua'
+    .LButton = include'lbutton.lua'
+    .LFrame = include'lframe.lua'
+    .LNumSlider = include'lnumslider.lua'
 
-{ 
-    :LPanel
-    :LLabel
-    :LLabelCompute
-    :LImage
-    :LButton
-    :LFrame
-}
+luna

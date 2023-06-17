@@ -1,4 +1,4 @@
-class LLabelCompute extends LLabel
+class LLabelCompute extends luna.LLabel
     Think: => 
         super!
         txt = @Compute!
