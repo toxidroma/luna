@@ -1,5 +1,5 @@
 import SetMaterial, SetDrawColor, DrawTexturedRect from surface
-class LImage extends LPanel
+class LImage extends luna.LPanel
     Color: color_white
     ImageName: ''
     MatName: ''

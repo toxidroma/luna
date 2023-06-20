@@ -1,63 +1,84 @@
 import ceil, min from math
-class LButton extends LLabel
-    DrawBorder: true
-    ContentAlignment: 5
-    Cursor: 'hand'
-    Font: 'ChatFont'
+local lp
 
+class ButtonHover extends SOUND
+    sound: 'luna/buttonrollover.ogg'
+
+class ButtonDown extends SOUND
+    sound: 'luna/buttonclick.ogg'
+
+class ButtonUp extends SOUND
+    sound: 'luna/buttonclickrelease.ogg'
+
+class LButton extends VGUI
+    m_bBackground: true --GOD DAMMIT GARRY
+                    --DON'T TOUCH THIS OR IT WON'T DRAW
+    Toggler: false
     new: (...) =>
         super ...
-        @SetContentAlignment @ContentAlignment
-        @SetTall 22
+        @Toggled = false
         @SetMouseInputEnabled true
-        @SetKeyboardInputEnabled true
-        @SetCursor @Cursor
-        @SetFont @Font
-    IsDown: => @Depressed
-    SetImage: (img) =>
-        unless img
-            @Image\Remove! if IsValid @Image
-            return
-        @Image = LImage! unless IsValid @Image
-        with @Image
-            if isstring img
-                \SetImage img
-            else
-                \SetMaterial img
-            \SizeToContents!
-        @InvalidateLayout!
-    @__base.SetIcon = @__base.SetImage
-    @__base.SetMaterial = @__base.SetImage
+        @SetCursor 'hand'
+        sz = luna.Scale 32
+        @SetSize sz, sz
+    DoToggle: (...) =>
+        return unless @Toggler
+        @Toggled = not @Toggled
+        @OnToggled @Toggled, ...
+    OnMousePressed: (mouseCode) =>
+        return unless @IsEnabled!
+        lp = LocalPlayer! unless lp
+        if @IsSelectable! and mouseCode == MOUSE_LEFT and (input.IsShiftDown! or input.IsControlDown!) and not (
+            lp\KeyDown IN_FORWARD or
+            lp\KeyDown IN_BACK or
+            lp\KeyDown IN_MOVELEFT or
+            lp\KeyDown IN_MOVERIGHT)
+                return @StartBoxSelection!
+        @MouseCapture true
+        @Depressed = true
+        LocalPlayer!\EmitSound 'ButtonDown'
+        @OnPressed mouseCode
+        @DragMousePress mouseCode
+    OnMouseReleased: (mouseCode) =>
+        @MouseCapture false
+        return unless @IsEnabled!
+        return if not @Depressed and dragndrop.m_DraggingMain != @
+        if @Depressed
+            @Depressed = nil
+            @OnReleased mouseCode
+        return if @DragMouseRelease mouseCode
+        if @IsSelectable! and mouseCode == MOUSE_LEFT
+            @GetSelectionCanvas\UnselectAll! if @GetSelectionCanvas!
+        return unless @Hovered
+        LocalPlayer!\EmitSound 'ButtonUp'
+        @Depressed = true
+        switch mouseCode
+            when MOUSE_LEFT
+                @DoClick!
+            when MOUSE_RIGHT
+                @DoRightClick!
+            when MOUSE_MIDDLE
+                @DoMiddleClick!
+        @Depressed = nil
     Paint: (w, h) =>
         derma.SkinHook 'Paint', 'Button', @, w, h
         false
-    UpdateColours: (skin) =>
-        with skin.Colours.Button
-            @TextStyleColor = unless @IsEnabled!
-                .Disabled
-            elseif @IsDown! or @m_bSelected
-                .Down
-            elseif @Hovered
-                .Hover
-            else
-                .Normal
-    PerformLayout: (...) =>
-        if IsValid @Image
-            target = min @GetWide! - 4, @GetTall! - 4
-            with @Image
-                zoom = min target / \GetWide!, target / \GetTall!, 1
-                \SetWide ceil(\GetWide! * zoom)
-                \SetTall ceil(\GetTall! * zoom)
-                if @GetWide! < @GetTall!
-                    \SetPos 4, (@GetTall! - \GetTall!) * .5
-                else
-                    \SetPos 2 + (target - @Image\GetWide!) * .5, (@GetTall! - \GetTall!) * .5
-                @SetTextInset \GetWide! + 16, 0
-        super ...
-    SetConsoleCommand: (name, args) => @DoClick = => RunConsoleCommand name, args
-    SizeToContents: =>
-        w, h = @GetContentSize!
-        @SetSize w + 8, h + 4
-    GetToggle: => @Toggle
-    GetDisabled: => @Disabled
-    --a thousand curses on garry for forcing me to write little handlers for his poorly extendable skin system
+    IsDown: => @Depressed
+    OnPressed: (mouseCode) =>
+    OnReleased: (mouseCode) =>
+    OnToggled: (enabled) =>
+    DoClick: (...) => @DoToggle ...
+    DoRightClick: =>
+    DoMiddleClick: =>
+    Think: =>
+        unless @HoveredLast
+            if @Hovered
+                @HoveredLast = true
+                LocalPlayer!\EmitSound 'ButtonHover'
+        elseif not @Hovered
+            @HoveredLast = false
+
+
+    --added for compatibility with derma skins
+    GetToggle: => @Toggled
+    GetDisabled: => not @IsEnabled
