@@ -11,14 +11,14 @@ hook.Add 'VGUIMousePressed', 'MenuFocus', DetectMenuFocus
 export luna = {}
 with luna
     .Scale = (value) -> math.max(value * (ScrH! / 1080), 1)
-    .Text = include'text.lua'
-    .LTextEntry = include'ltextentry.lua'
-    --.LPanel = include'lpanel.lua'
-    .LLabel = include'llabel.lua'
-    --.LLabelCompute = include'llabelcompute.lua'
-    --.LImage = include'limage.lua'
-    .LButton = include'lbutton.lua'
-    .LFrame = include'lframe.lua'
-    .LNumSlider = include'lnumslider.lua'
+    .Text = include'text.moon'
+    .LTextEntry = include'ltextentry.moon'
+    --.LPanel = include'lpanel.moon'
+    .LLabel = include'llabel.moon'
+    --.LLabelCompute = include'llabelcompute.moon'
+    --.LImage = include'limage.moon'
+    .LButton = include'lbutton.moon'
+    .LFrame = include'lframe.moon'
+    .LNumSlider = include'lnumslider.moon'
 
 luna

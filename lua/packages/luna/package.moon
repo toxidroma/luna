@@ -1,16 +1,17 @@
 export *
-name = "luna"
+name    = 'luna'
 version = 000000
 autorun = false
-server = false
+init    =
+    client: 'cl_init.moon'
 send = {
-    'text.lua'
-    'ltextentry.lua'
-    'lpanel.lua'
-    'llabel.lua'
-    'llabelcompute.lua'
-    'limage.lua'
-    'lbutton.lua'
-    'lframe.lua'
-    'lnumslider.lua'
+    'text.moon'
+    'ltextentry.moon'
+    'lpanel.moon'
+    'llabel.moon'
+    'llabelcompute.moon'
+    'limage.moon'
+    'lbutton.moon'
+    'lframe.moon'
+    'lnumslider.moon'
 }
