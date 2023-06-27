@@ -3,15 +3,15 @@ name    = 'luna'
 version = 000000
 autorun = false
 init    =
-    client: 'cl_init.moon'
+    client: 'cl_init.lua'
 send = {
-    'text.moon'
-    'ltextentry.moon'
-    'lpanel.moon'
-    'llabel.moon'
-    'llabelcompute.moon'
-    'limage.moon'
-    'lbutton.moon'
-    'lframe.moon'
-    'lnumslider.moon'
+    'text.lua'
+    'ltextentry.lua'
+    'lpanel.lua'
+    'llabel.lua'
+    'llabelcompute.lua'
+    'limage.lua'
+    'lbutton.lua'
+    'lframe.lua'
+    'lnumslider.lua'
 }
